@@ -12,6 +12,17 @@ import kullervo16.jmxstats.api.CounterMXBean;
 public class Counter implements CounterMXBean, Serializable{
     
     private int value;
+    private final String description;
+
+    public Counter(String description) {
+        this.description = description;
+    }
+
+    public Counter() {
+        this.description = "";
+    }
+            
+
 
     @Override
     public Counter increment() {
@@ -28,6 +39,11 @@ public class Counter implements CounterMXBean, Serializable{
     @Override
     public int getValue() {
         return this.value;
+    }
+
+    @Override
+    public String getDescription() {
+        return this.description;
     }
 
 }

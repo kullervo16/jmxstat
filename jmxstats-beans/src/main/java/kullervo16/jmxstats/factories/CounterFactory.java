@@ -4,8 +4,6 @@ package kullervo16.jmxstats.factories;
 import java.lang.management.ManagementFactory;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.management.InstanceAlreadyExistsException;
 import javax.management.MBeanRegistrationException;
 import javax.management.MBeanServer;
@@ -30,10 +28,12 @@ public class CounterFactory {
     }
     
     
-
-    
     public Counter createCounter() {
         return new kullervo16.jmxstats.impl.Counter();
+    }
+    
+    public Counter createCounter(String description) {
+        return new kullervo16.jmxstats.impl.Counter(description);
     }
     
     /**
@@ -43,13 +43,13 @@ public class CounterFactory {
      * @param id
      * @return   
      */
-    public Counter getJmxCounter(String id)  {
+    public Counter getJmxCounter(String id, String description)  {
         try {
             synchronized (this.lock) {
                 if(this.counterMap.containsKey(id)) {
                     return this.counterMap.get(id);
                 }
-                this.counterMap.put(id, this.createCounter());
+                this.counterMap.put(id, this.createCounter(description));
             }
             // release the lock, we can safely allow others in... we have the reference so they can begin counting while
             // we continue the registration process

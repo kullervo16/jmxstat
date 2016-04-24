@@ -39,6 +39,6 @@ public class CounterDemoBean {
     }
         
     public int getJmxValue() {        
-        return counterFactory.getJmxCounter("type=demoCounter").increment().getValue();        
+        return counterFactory.getJmxCounter("type=demoCounter","Counter to count the number of times a page has been fetched").increment().getValue();        
     }
 }

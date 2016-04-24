@@ -8,4 +8,5 @@ package kullervo16.jmxstats.api;
  */
 public interface CounterMXBean extends Counter {
 
+    public String getDescription();
 }

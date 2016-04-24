@@ -5,18 +5,9 @@
  */
 package kullervo16.jmxstats;
 
-import javax.management.InstanceAlreadyExistsException;
-import javax.management.MBeanRegistrationException;
-import javax.management.MalformedObjectNameException;
-import javax.management.NotCompliantMBeanException;
 import kullervo16.jmxstats.factories.CounterFactory;
 import kullervo16.jmxstats.factories.JmxFactoryProducer;
 import kullervo16.jmxstats.impl.Counter;
-import org.junit.After;
-import org.junit.AfterClass;
-import org.junit.Before;
-import org.junit.BeforeClass;
-import org.junit.Test;
 import static org.junit.Assert.*;
 
 /**
@@ -77,16 +68,17 @@ public class CounterTest {
         assertNotEquals(c1.getValue(), c2.getValue());
         
         // now with jmx counters
-        c1 = (Counter) factory.getJmxCounter("type=test");
-        c2 = (Counter) factory.getJmxCounter("type=test");
+        c1 = (Counter) factory.getJmxCounter("type=test", "Description 1");
+        c2 = (Counter) factory.getJmxCounter("type=test", "Description 2");
         assertNotNull(c1);  
         c1.increment(60);
         assertNotNull(c2);
         assertTrue(c1.equals(c2)); 
         assertEquals(60, c2.getValue());
+        assertEquals("Description 1", c1.getDescription());
         
         try {
-            factory.getJmxCounter("invalid");
+            factory.getJmxCounter("invalid",null);
             fail("Should trow invalidargument");
         }catch(IllegalArgumentException iae) {
             
