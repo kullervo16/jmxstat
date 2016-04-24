@@ -1,16 +1,11 @@
 
 package kullervo16;
 
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import java.io.Serializable;
 import javax.annotation.PostConstruct;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 import javax.inject.Inject;
-import javax.management.InstanceAlreadyExistsException;
-import javax.management.MBeanRegistrationException;
-import javax.management.MalformedObjectNameException;
-import javax.management.NotCompliantMBeanException;
 import kullervo16.jmxstats.api.Counter;
 import kullervo16.jmxstats.factories.CounterFactory;
 
@@ -21,7 +16,7 @@ import kullervo16.jmxstats.factories.CounterFactory;
  */
 @ManagedBean(name = "counter")
 @SessionScoped
-public class CounterDemoBean {
+public class CounterDemoBean implements Serializable{
 
     @Inject
     private CounterFactory counterFactory;

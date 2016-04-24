@@ -46,4 +46,10 @@ public class Counter implements CounterMXBean, Serializable{
         return this.description;
     }
 
+    @Override
+    public String toString() {
+        return "Counter{" + "value=" + value + ", description=" + description + '}';
+    }
+
+    
 }

@@ -5,6 +5,13 @@
  */
 package kullervo16.jmxstats;
 
+import java.lang.management.ManagementFactory;
+import javax.management.InstanceNotFoundException;
+import javax.management.IntrospectionException;
+import javax.management.MBeanServer;
+import javax.management.MalformedObjectNameException;
+import javax.management.ObjectName;
+import javax.management.ReflectionException;
 import kullervo16.jmxstats.factories.CounterFactory;
 import kullervo16.jmxstats.factories.JmxFactoryProducer;
 import kullervo16.jmxstats.impl.Counter;
@@ -84,5 +91,58 @@ public class CounterTest {
             
         }
     }
+    
+    @org.junit.Test
+    public void testUndeployCounterCleanup() throws MalformedObjectNameException, InstanceNotFoundException, IntrospectionException, ReflectionException  {
+        CounterFactory factory = new JmxFactoryProducer().getCounterFactory();
+        Counter c1 = (Counter) factory.getJmxCounter(CLEANUP_TEST1, "Counter to test cleanup");
+        Counter c2 = (Counter) factory.getJmxCounter(CLEANUP_TEST2, "Counter to test cleanup");
         
+        MBeanServer mbs = ManagementFactory.getPlatformMBeanServer();
+        ObjectName mxbeanName1 = new ObjectName(factory.getPrefix()+CLEANUP_TEST1);        
+        assertNotNull(mbs.getMBeanInfo(mxbeanName1));
+        
+        ObjectName mxbeanName2 = new ObjectName(factory.getPrefix()+CLEANUP_TEST2);        
+        assertNotNull(mbs.getMBeanInfo(mxbeanName2));
+        
+        factory.unregisterBeans();
+        try {
+            mbs.getMBeanInfo(mxbeanName1);
+            fail("Instance1 found that should be gone");
+        } catch(InstanceNotFoundException infe) {
+            try {
+                mbs.getMBeanInfo(mxbeanName2);
+                fail("Instance2 found that should be gone");
+            } catch(InstanceNotFoundException infe2) {
+                return; // ok
+            }
+        }
+        fail("Wrong exceptions thrown");
+    }
+    
+    @org.junit.Test
+    public void testCounterCleanup() throws MalformedObjectNameException, InstanceNotFoundException, IntrospectionException, ReflectionException  {
+        CounterFactory factory = new JmxFactoryProducer().getCounterFactory();
+        Counter c1 = (Counter) factory.getJmxCounter(CLEANUP_TEST1, "Counter to test cleanup");
+        Counter c2 = (Counter) factory.getJmxCounter(CLEANUP_TEST2, "Counter to test cleanup");
+        
+        MBeanServer mbs = ManagementFactory.getPlatformMBeanServer();
+        ObjectName mxbeanName1 = new ObjectName(factory.getPrefix()+CLEANUP_TEST1);        
+        assertNotNull(mbs.getMBeanInfo(mxbeanName1));
+        
+        ObjectName mxbeanName2 = new ObjectName(factory.getPrefix()+CLEANUP_TEST2);        
+        assertNotNull(mbs.getMBeanInfo(mxbeanName2));
+        
+        factory.unregisterCounter(CLEANUP_TEST2);
+        try {
+            mbs.getMBeanInfo(mxbeanName2);
+            fail("Instance1 found that should be gone");
+        } catch(InstanceNotFoundException infe) {
+            assertNotNull(mbs.getMBeanInfo(mxbeanName1));
+            return; //ok
+        }
+        fail("Wrong exceptions thrown");
+    }
+    private static final String CLEANUP_TEST1 = "type=cleanupTest1";
+    private static final String CLEANUP_TEST2 = "type=cleanupTest2";
 }

@@ -28,6 +28,10 @@ public class CounterFactory {
         this.prefix = prefix;
     }
     
+    public String getPrefix() {
+        return this.prefix;
+    }
+    
     
     public Counter createCounter() {
         return new kullervo16.jmxstats.impl.Counter();
@@ -74,7 +78,7 @@ public class CounterFactory {
         } 
     }
 
-    void unregisterBeans() {
+    public void unregisterBeans() {
         synchronized (this.lock) {
             MBeanServer mbs = ManagementFactory.getPlatformMBeanServer();
             
@@ -88,6 +92,20 @@ public class CounterFactory {
             }
             System.out.println("Unregistered "+this.counterMap.size()+" JMX counters");
             this.counterMap.clear();
+        }
+    }
+    
+    public void unregisterCounter(String id) {        
+        synchronized (this.lock) {
+            // do this when nobody is looping
+            this.counterMap.remove(id);
+        }
+        MBeanServer mbs = ManagementFactory.getPlatformMBeanServer();
+        try {
+            ObjectName mxbeanName = new ObjectName(prefix+id);                
+            mbs.unregisterMBean(mxbeanName);
+        }catch(InstanceNotFoundException | MBeanRegistrationException | MalformedObjectNameException registEx) {
+            // well' what can we do... just ignore
         }
     }
 }
