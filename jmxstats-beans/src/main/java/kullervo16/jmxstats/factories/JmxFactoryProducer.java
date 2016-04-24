@@ -11,7 +11,9 @@ import javax.enterprise.inject.Produces;
 @ApplicationScoped
 public class JmxFactoryProducer {
     
-    private CounterFactory counterFactory = new CounterFactory();
+    private final static String prefix = "kullervo16.jmx:";
+    
+    private final CounterFactory counterFactory = new CounterFactory(prefix);
 
     @Produces
     public CounterFactory getCounterFactory() {

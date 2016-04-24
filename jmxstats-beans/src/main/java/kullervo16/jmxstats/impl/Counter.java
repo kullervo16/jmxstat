@@ -2,25 +2,25 @@
 package kullervo16.jmxstats.impl;
 
 import java.io.Serializable;
-import kullervo16.jmxstats.api.Counter;
+import kullervo16.jmxstats.api.CounterMXBean;
 
 /**
  * This class models a simple counter.
  * 
  * @author jef
  */
-public class BasicCounterImpl implements Counter, Serializable{
+public class Counter implements CounterMXBean, Serializable{
     
     private int value;
 
     @Override
-    public BasicCounterImpl increment() {
+    public Counter increment() {
         this.value++;
         return this;
     }
 
     @Override
-    public BasicCounterImpl increment(int inc) {
+    public Counter increment(int inc) {
         this.value += inc;
         return this;
     }
