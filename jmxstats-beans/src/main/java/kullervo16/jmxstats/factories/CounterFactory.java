@@ -66,9 +66,28 @@ public class CounterFactory {
             }
             return this.counterMap.get(id);
         } catch (MalformedObjectNameException ex) {
+            this.counterMap.remove(id);
             throw new IllegalArgumentException("Cannot register "+id, ex);
         } catch (InstanceNotFoundException | InstanceAlreadyExistsException | MBeanRegistrationException | NotCompliantMBeanException ex) {
+            this.counterMap.remove(id);
             throw new IllegalStateException("Cannot register "+id, ex);
         } 
+    }
+
+    void unregisterBeans() {
+        synchronized (this.lock) {
+            MBeanServer mbs = ManagementFactory.getPlatformMBeanServer();
+            
+            for(String name : this.counterMap.keySet()) {
+                try {
+                    ObjectName mxbeanName = new ObjectName(prefix+name);                
+                    mbs.unregisterMBean(mxbeanName);
+                }catch(InstanceNotFoundException | MBeanRegistrationException | MalformedObjectNameException registEx) {
+                    // well' what can we do... just ignore
+                }
+            }
+            System.out.println("Unregistered "+this.counterMap.size()+" JMX counters");
+            this.counterMap.clear();
+        }
     }
 }
