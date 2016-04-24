@@ -38,12 +38,7 @@ public class CounterDemoBean {
         
     }
         
-    public int getJmxValue() {
-        try {
-            return counterFactory.getJmxCounter("type=demoCounter").increment().getValue();
-        } catch (MalformedObjectNameException | InstanceAlreadyExistsException | MBeanRegistrationException | NotCompliantMBeanException ex) {
-            Logger.getLogger(CounterDemoBean.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        return -1;
+    public int getJmxValue() {        
+        return counterFactory.getJmxCounter("type=demoCounter").increment().getValue();        
     }
 }

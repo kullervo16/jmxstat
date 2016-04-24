@@ -4,6 +4,8 @@ package kullervo16.jmxstats.factories;
 import java.lang.management.ManagementFactory;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.management.InstanceAlreadyExistsException;
 import javax.management.MBeanRegistrationException;
 import javax.management.MBeanServer;
@@ -39,24 +41,26 @@ public class CounterFactory {
      * the existing counter is returned.
      * 
      * @param id
-     * @return 
-     * @throws javax.management.MalformedObjectNameException 
-     * @throws javax.management.InstanceAlreadyExistsException 
-     * @throws javax.management.MBeanRegistrationException 
-     * @throws javax.management.NotCompliantMBeanException 
+     * @return   
      */
-    public Counter getJmxCounter(String id) throws MalformedObjectNameException, InstanceAlreadyExistsException, MBeanRegistrationException, NotCompliantMBeanException {
-        synchronized (this.lock) {
-            if(this.counterMap.containsKey(id)) {
-                return this.counterMap.get(id);
+    public Counter getJmxCounter(String id)  {
+        try {
+            synchronized (this.lock) {
+                if(this.counterMap.containsKey(id)) {
+                    return this.counterMap.get(id);
+                }
+                this.counterMap.put(id, this.createCounter());
             }
-            this.counterMap.put(id, this.createCounter());
-        }
-        // release the lock, we can safely allow others in... we have the reference so they can begin counting while
-        // we continue the registration process
-        MBeanServer mbs = ManagementFactory.getPlatformMBeanServer();
-        ObjectName mxbeanName = new ObjectName(prefix+id);
-        mbs.registerMBean(this.counterMap.get(id), mxbeanName);
-        return this.counterMap.get(id);
+            // release the lock, we can safely allow others in... we have the reference so they can begin counting while
+            // we continue the registration process
+            MBeanServer mbs = ManagementFactory.getPlatformMBeanServer();
+            ObjectName mxbeanName = new ObjectName(prefix+id);
+            mbs.registerMBean(this.counterMap.get(id), mxbeanName);
+            return this.counterMap.get(id);
+        } catch (MalformedObjectNameException ex) {
+            throw new IllegalArgumentException("Cannot register "+id, ex);
+        } catch (InstanceAlreadyExistsException | MBeanRegistrationException | NotCompliantMBeanException ex) {
+            throw new IllegalStateException("Cannot register "+id, ex);
+        } 
     }
 }
