@@ -5,6 +5,7 @@ import java.lang.management.ManagementFactory;
 import java.util.HashMap;
 import java.util.Map;
 import javax.management.InstanceAlreadyExistsException;
+import javax.management.InstanceNotFoundException;
 import javax.management.MBeanRegistrationException;
 import javax.management.MBeanServer;
 import javax.management.MalformedObjectNameException;
@@ -41,6 +42,7 @@ public class CounterFactory {
      * the existing counter is returned.
      * 
      * @param id
+     * @param description
      * @return   
      */
     public Counter getJmxCounter(String id, String description)  {
@@ -55,11 +57,17 @@ public class CounterFactory {
             // we continue the registration process
             MBeanServer mbs = ManagementFactory.getPlatformMBeanServer();
             ObjectName mxbeanName = new ObjectName(prefix+id);
-            mbs.registerMBean(this.counterMap.get(id), mxbeanName);
+            try {
+                mbs.registerMBean(this.counterMap.get(id), mxbeanName);
+            }catch(InstanceAlreadyExistsException iaee) {
+                // well, this is most probably a reload of our application.. the value was not in our map, but still in the MBeanServer... remove and reregister
+                mbs.unregisterMBean(mxbeanName);
+                mbs.registerMBean(this.counterMap.get(id), mxbeanName);
+            }
             return this.counterMap.get(id);
         } catch (MalformedObjectNameException ex) {
             throw new IllegalArgumentException("Cannot register "+id, ex);
-        } catch (InstanceAlreadyExistsException | MBeanRegistrationException | NotCompliantMBeanException ex) {
+        } catch (InstanceNotFoundException | InstanceAlreadyExistsException | MBeanRegistrationException | NotCompliantMBeanException ex) {
             throw new IllegalStateException("Cannot register "+id, ex);
         } 
     }
