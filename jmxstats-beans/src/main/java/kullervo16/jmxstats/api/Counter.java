@@ -29,4 +29,16 @@ public interface Counter {
      * @return the current value of the counter. 
      */
     public long getValue();
+    
+    /**
+     * This method sets the description of what is counted
+     * @param description 
+     */
+    public void setDescription(String description);
+    
+    /**
+     * This method specifies the counters unit
+     * @param unit 
+     */
+    public void setUnit(String unit);
 }

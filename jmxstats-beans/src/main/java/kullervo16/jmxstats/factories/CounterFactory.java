@@ -37,25 +37,25 @@ public class CounterFactory {
         return new kullervo16.jmxstats.impl.Counter();
     }
     
-    public Counter createCounter(String description) {
-        return new kullervo16.jmxstats.impl.Counter(description);
+    public Counter createCounter(String id) {
+        return new kullervo16.jmxstats.impl.Counter(id);
     }
+        
     
     /**
      * This methods returns a counter for a given id. If the counter does not exist yet, it will be created. Otherwise,
      * the existing counter is returned.
      * 
-     * @param id
-     * @param description
+     * @param id     
      * @return   
      */
-    public Counter getJmxCounter(String id, String description)  {
+    public Counter getJmxCounter(String id)  {
         try {
             synchronized (this.lock) {
                 if(this.counterMap.containsKey(id)) {
                     return this.counterMap.get(id);
                 }
-                this.counterMap.put(id, this.createCounter(description));
+                this.counterMap.put(id, this.createCounter(id));
             }
             // release the lock, we can safely allow others in... we have the reference so they can begin counting while
             // we continue the registration process

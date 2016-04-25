@@ -8,6 +8,8 @@ package kullervo16.jmxstats;
 import java.lang.management.ManagementFactory;
 import javax.management.InstanceNotFoundException;
 import javax.management.IntrospectionException;
+import javax.management.MBeanAttributeInfo;
+import javax.management.MBeanInfo;
 import javax.management.MBeanServer;
 import javax.management.MalformedObjectNameException;
 import javax.management.ObjectName;
@@ -33,7 +35,6 @@ public class CounterTest {
      */
     @org.junit.Test
     public void testIncrement_0args() {
-        System.out.println("increment");
         Counter instance = new Counter();
         
         Counter result = instance.increment();
@@ -47,16 +48,15 @@ public class CounterTest {
      */
     @org.junit.Test
     public void testIncrement_int() {
-        System.out.println("increment");        
         Counter instance = new Counter();
         
         Counter result = instance.increment(42);
         assertEquals(42, result.getValue());
         result = instance.increment(666);
         assertEquals(42+666, result.getValue());
-        
+                        
     }
-    
+            
     @org.junit.Test
     public void testCreateFactory() {        
         assertNotNull(new JmxFactoryProducer().getCounterFactory());        
@@ -75,8 +75,9 @@ public class CounterTest {
         assertNotEquals(c1.getValue(), c2.getValue());
         
         // now with jmx counters
-        c1 = (Counter) factory.getJmxCounter("type=test", "Description 1");
-        c2 = (Counter) factory.getJmxCounter("type=test", "Description 2");
+        c1 = (Counter) factory.getJmxCounter("type=test");
+        c1.setDescription("Description 1");
+        c2 = (Counter) factory.getJmxCounter("type=test");
         assertNotNull(c1);  
         c1.increment(60);
         assertNotNull(c2);
@@ -85,7 +86,7 @@ public class CounterTest {
         assertEquals("Description 1", c1.getDescription());
         
         try {
-            factory.getJmxCounter("invalid",null);
+            factory.getJmxCounter("invalid");
             fail("Should trow invalidargument");
         }catch(IllegalArgumentException iae) {
             
@@ -95,8 +96,8 @@ public class CounterTest {
     @org.junit.Test
     public void testUndeployCounterCleanup() throws MalformedObjectNameException, InstanceNotFoundException, IntrospectionException, ReflectionException  {
         CounterFactory factory = new JmxFactoryProducer().getCounterFactory();
-        Counter c1 = (Counter) factory.getJmxCounter(CLEANUP_TEST1, "Counter to test cleanup");
-        Counter c2 = (Counter) factory.getJmxCounter(CLEANUP_TEST2, "Counter to test cleanup");
+        Counter c1 = (Counter) factory.getJmxCounter(CLEANUP_TEST1);
+        Counter c2 = (Counter) factory.getJmxCounter(CLEANUP_TEST2);
         
         MBeanServer mbs = ManagementFactory.getPlatformMBeanServer();
         ObjectName mxbeanName1 = new ObjectName(factory.getPrefix()+CLEANUP_TEST1);        
@@ -123,8 +124,8 @@ public class CounterTest {
     @org.junit.Test
     public void testCounterCleanup() throws MalformedObjectNameException, InstanceNotFoundException, IntrospectionException, ReflectionException  {
         CounterFactory factory = new JmxFactoryProducer().getCounterFactory();
-        Counter c1 = (Counter) factory.getJmxCounter(CLEANUP_TEST1, "Counter to test cleanup");
-        Counter c2 = (Counter) factory.getJmxCounter(CLEANUP_TEST2, "Counter to test cleanup");
+        Counter c1 = (Counter) factory.getJmxCounter(CLEANUP_TEST1);
+        Counter c2 = (Counter) factory.getJmxCounter(CLEANUP_TEST2);
         
         MBeanServer mbs = ManagementFactory.getPlatformMBeanServer();
         ObjectName mxbeanName1 = new ObjectName(factory.getPrefix()+CLEANUP_TEST1);        
@@ -143,6 +144,49 @@ public class CounterTest {
         }
         fail("Wrong exceptions thrown");
     }
+    
+    @org.junit.Test
+    public void testDescription() {
+        CounterFactory factory = new JmxFactoryProducer().getCounterFactory();
+        Counter c1 = (Counter) factory.getJmxCounter(CLEANUP_TEST1);
+        c1.setDescription("My description");
+        try {
+            MBeanServer mbs = ManagementFactory.getPlatformMBeanServer();
+            ObjectName mxbeanName1 = new ObjectName(factory.getPrefix()+CLEANUP_TEST1);        
+            MBeanInfo info = mbs.getMBeanInfo(mxbeanName1);
+            for(MBeanAttributeInfo attr : info.getAttributes()) {
+                if(attr.getName().equals("Description")) {
+                    assertEquals("My description",mbs.getAttribute(mxbeanName1, attr.getName()));
+                    return;
+                }
+            }
+            fail("Description not found");
+        }catch(Exception e) {
+            fail(e.getMessage());
+        }
+    }
+    
+    @org.junit.Test
+    public void testUnit() {
+        CounterFactory factory = new JmxFactoryProducer().getCounterFactory();
+        Counter c1 = (Counter) factory.getJmxCounter(CLEANUP_TEST1);
+        c1.setUnit("flurps per millisecond");
+        try {
+            MBeanServer mbs = ManagementFactory.getPlatformMBeanServer();
+            ObjectName mxbeanName1 = new ObjectName(factory.getPrefix()+CLEANUP_TEST1);        
+            MBeanInfo info = mbs.getMBeanInfo(mxbeanName1);
+            for(MBeanAttributeInfo attr : info.getAttributes()) {
+                if(attr.getName().equals("Unit")) {
+                    assertEquals("flurps per millisecond",mbs.getAttribute(mxbeanName1, attr.getName()));
+                    return;
+                }
+            }
+            fail("Unit not found");
+        }catch(Exception e) {
+            fail(e.getMessage());
+        }
+    }
+    
     private static final String CLEANUP_TEST1 = "type=cleanupTest1";
     private static final String CLEANUP_TEST2 = "type=cleanupTest2";
 }

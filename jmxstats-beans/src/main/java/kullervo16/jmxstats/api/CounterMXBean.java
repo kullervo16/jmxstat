@@ -8,5 +8,15 @@ package kullervo16.jmxstats.api;
  */
 public interface CounterMXBean extends Counter {
 
+    /**
+     * 
+     * @return the description of the counter (useful when browsing the JMX tree) 
+     */
     public String getDescription();
+    
+    /**
+     * 
+     * @return the description of the counter (useful when browsing the JMX tree) 
+     */
+    public String getUnit();
 }

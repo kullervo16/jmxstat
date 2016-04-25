@@ -26,6 +26,8 @@ public class CounterDemoBean implements Serializable{
     @PostConstruct
     public void setup() {
         myCounter = counterFactory.createCounter();
+        counterFactory.getJmxCounter(TYPEDEMO_COUNTER).setDescription("Counter to count the number of times a page has been fetched");
+        counterFactory.getJmxCounter(TYPEDEMO_COUNTER).setUnit("page loads");
     }
     
     public long getCounterValue() {
@@ -34,6 +36,7 @@ public class CounterDemoBean implements Serializable{
     }
         
     public long getJmxValue() {        
-        return counterFactory.getJmxCounter("type=demoCounter","Counter to count the number of times a page has been fetched").increment().getValue();        
+        return counterFactory.getJmxCounter(TYPEDEMO_COUNTER).increment().getValue();        
     }
+    private static final String TYPEDEMO_COUNTER = "type=demoCounter";
 }
