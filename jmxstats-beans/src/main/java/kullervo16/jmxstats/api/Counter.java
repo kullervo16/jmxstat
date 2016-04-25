@@ -22,11 +22,11 @@ public interface Counter {
      * @param inc 
      * @return the instance (fluent api)
      */
-    public Counter increment(int inc);
+    public Counter increment(long inc);
     
     /**
      * 
      * @return the current value of the counter. 
      */
-    public int getValue();
+    public long getValue();
 }

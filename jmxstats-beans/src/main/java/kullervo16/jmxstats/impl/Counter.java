@@ -11,7 +11,7 @@ import kullervo16.jmxstats.api.CounterMXBean;
  */
 public class Counter implements CounterMXBean, Serializable{
     
-    private int value;
+    private long value;
     private final String description;
 
     public Counter(String description) {
@@ -31,13 +31,13 @@ public class Counter implements CounterMXBean, Serializable{
     }
 
     @Override
-    public Counter increment(int inc) {
+    public Counter increment(long inc) {
         this.value += inc;
         return this;
     }
 
     @Override
-    public int getValue() {
+    public long getValue() {
         return this.value;
     }
 

@@ -28,12 +28,12 @@ public class CounterDemoBean implements Serializable{
         myCounter = counterFactory.createCounter();
     }
     
-    public int getCounterValue() {
+    public long getCounterValue() {
         return myCounter.increment().getValue();
         
     }
         
-    public int getJmxValue() {        
+    public long getJmxValue() {        
         return counterFactory.getJmxCounter("type=demoCounter","Counter to count the number of times a page has been fetched").increment().getValue();        
     }
 }
