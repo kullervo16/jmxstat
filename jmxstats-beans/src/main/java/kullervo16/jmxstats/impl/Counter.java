@@ -39,6 +39,14 @@ public class Counter implements CounterMXBean, Serializable{
     }
 
     @Override
+    public Counter reset() {
+        this.value = 0L;
+        return this;
+    }
+    
+    
+
+    @Override
     public long getValue() {
         return this.value;
     }

@@ -56,7 +56,20 @@ public class CounterTest {
         assertEquals(42+666, result.getValue());
                         
     }
-            
+
+    @org.junit.Test
+    public void testReset() {
+        Counter instance = new Counter();
+        
+        Counter result = instance.increment();
+        assertEquals(1, result.getValue());  
+        result = instance.increment();
+        assertEquals(2, result.getValue());
+        result = instance.reset();
+        assertEquals(0, result.getValue());
+    }
+
+    
     @org.junit.Test
     public void testCreateFactory() {        
         assertNotNull(new JmxFactoryProducer().getCounterFactory());        

@@ -25,6 +25,12 @@ public interface Counter {
     public Counter increment(long inc);
     
     /**
+     * Resets the counter back to its initial position (0).
+     * @return 
+     */
+    public Counter reset();
+    
+    /**
      * 
      * @return the current value of the counter. 
      */
