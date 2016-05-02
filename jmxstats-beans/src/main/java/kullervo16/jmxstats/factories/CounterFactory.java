@@ -2,8 +2,13 @@
 package kullervo16.jmxstats.factories;
 
 import java.lang.management.ManagementFactory;
+import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.management.InstanceAlreadyExistsException;
 import javax.management.InstanceNotFoundException;
 import javax.management.MBeanRegistrationException;
@@ -12,6 +17,7 @@ import javax.management.MalformedObjectNameException;
 import javax.management.NotCompliantMBeanException;
 import javax.management.ObjectName;
 import kullervo16.jmxstats.api.Counter;
+import kullervo16.jmxstats.api.CounterDecorator;
 
 /**
  * This class produces counter instances.
@@ -34,11 +40,40 @@ public class CounterFactory {
     
     
     public Counter createCounter() {
-        return new kullervo16.jmxstats.impl.Counter();
+        return this.createCounter(null);
     }
     
     public Counter createCounter(String id) {
-        return new kullervo16.jmxstats.impl.Counter(id);
+        return new kullervo16.jmxstats.impl.CounterImpl(id);    
+    }
+    
+    public CounterDecorator createDecoratedCounter(List<Class<? extends CounterDecorator>> featureList) {
+        return this.createDecoratedCounter(null, featureList);
+    }
+    
+    public CounterDecorator createDecoratedCounter(String id, List<Class<? extends CounterDecorator>> featureList)  {
+        Counter counter = this.createCounter(id);
+        if(featureList == null || featureList.isEmpty()) {
+            throw new IllegalArgumentException("Passing a null/empty feature list is useless. Please use the appropriate API");
+        }
+        Counter next = counter;
+        CounterDecorator result = null;
+        Class ctrParam[] = new Class[1];
+        ctrParam[0] = Counter.class;
+        for(Class clazz : featureList) {            
+            Object args[] = new Object[1];
+            args[0] = next;
+            try {
+                Constructor constr = clazz.getConstructor(ctrParam);
+           
+                CounterDecorator newDecorator = (CounterDecorator) constr.newInstance(args);
+                result = newDecorator;
+                next = newDecorator;
+            } catch (NoSuchMethodException | InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException ex) {
+                throw new IllegalStateException("Cannot instantiate feature of class "+clazz, ex);
+            }            
+        }
+        return result;
     }
         
     

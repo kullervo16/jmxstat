@@ -16,7 +16,7 @@ import javax.management.ObjectName;
 import javax.management.ReflectionException;
 import kullervo16.jmxstats.factories.CounterFactory;
 import kullervo16.jmxstats.factories.JmxFactoryProducer;
-import kullervo16.jmxstats.impl.Counter;
+import kullervo16.jmxstats.impl.CounterImpl;
 import static org.junit.Assert.*;
 
 /**
@@ -35,9 +35,9 @@ public class CounterTest {
      */
     @org.junit.Test
     public void testIncrement_0args() {
-        Counter instance = new Counter();
+        CounterImpl instance = new CounterImpl(null);
         
-        Counter result = instance.increment();
+        CounterImpl result = instance.increment();
         assertEquals(1, result.getValue());  
         result = instance.increment();
         assertEquals(2, result.getValue()); 
@@ -48,9 +48,9 @@ public class CounterTest {
      */
     @org.junit.Test
     public void testIncrement_int() {
-        Counter instance = new Counter();
+        CounterImpl instance = new CounterImpl(null);
         
-        Counter result = instance.increment(42);
+        CounterImpl result = instance.increment(42);
         assertEquals(42, result.getValue());
         result = instance.increment(666);
         assertEquals(42+666, result.getValue());
@@ -59,9 +59,9 @@ public class CounterTest {
 
     @org.junit.Test
     public void testReset() {
-        Counter instance = new Counter();
+        CounterImpl instance = new CounterImpl(null);
         
-        Counter result = instance.increment();
+        CounterImpl result = instance.increment();
         assertEquals(1, result.getValue());  
         result = instance.increment();
         assertEquals(2, result.getValue());
@@ -78,8 +78,8 @@ public class CounterTest {
     @org.junit.Test
     public void testCreateCounterViaFactory()  {      
         CounterFactory factory = new JmxFactoryProducer().getCounterFactory();
-        Counter c1 = (Counter) factory.createCounter();
-        Counter c2 = (Counter) factory.createCounter();
+        CounterImpl c1 = (CounterImpl) factory.createCounter();
+        CounterImpl c2 = (CounterImpl) factory.createCounter();
         assertNotNull(c1); 
         c1.increment(60);
         assertNotNull(c2);
@@ -88,9 +88,9 @@ public class CounterTest {
         assertNotEquals(c1.getValue(), c2.getValue());
         
         // now with jmx counters
-        c1 = (Counter) factory.getJmxCounter("type=test");
+        c1 = (CounterImpl) factory.getJmxCounter("type=test");
         c1.setDescription("Description 1");
-        c2 = (Counter) factory.getJmxCounter("type=test");
+        c2 = (CounterImpl) factory.getJmxCounter("type=test");
         assertNotNull(c1);  
         c1.increment(60);
         assertNotNull(c2);
@@ -109,8 +109,8 @@ public class CounterTest {
     @org.junit.Test
     public void testUndeployCounterCleanup() throws MalformedObjectNameException, InstanceNotFoundException, IntrospectionException, ReflectionException  {
         CounterFactory factory = new JmxFactoryProducer().getCounterFactory();
-        Counter c1 = (Counter) factory.getJmxCounter(CLEANUP_TEST1);
-        Counter c2 = (Counter) factory.getJmxCounter(CLEANUP_TEST2);
+        CounterImpl c1 = (CounterImpl) factory.getJmxCounter(CLEANUP_TEST1);
+        CounterImpl c2 = (CounterImpl) factory.getJmxCounter(CLEANUP_TEST2);
         
         MBeanServer mbs = ManagementFactory.getPlatformMBeanServer();
         ObjectName mxbeanName1 = new ObjectName(factory.getPrefix()+CLEANUP_TEST1);        
@@ -137,8 +137,8 @@ public class CounterTest {
     @org.junit.Test
     public void testCounterCleanup() throws MalformedObjectNameException, InstanceNotFoundException, IntrospectionException, ReflectionException  {
         CounterFactory factory = new JmxFactoryProducer().getCounterFactory();
-        Counter c1 = (Counter) factory.getJmxCounter(CLEANUP_TEST1);
-        Counter c2 = (Counter) factory.getJmxCounter(CLEANUP_TEST2);
+        CounterImpl c1 = (CounterImpl) factory.getJmxCounter(CLEANUP_TEST1);
+        CounterImpl c2 = (CounterImpl) factory.getJmxCounter(CLEANUP_TEST2);
         
         MBeanServer mbs = ManagementFactory.getPlatformMBeanServer();
         ObjectName mxbeanName1 = new ObjectName(factory.getPrefix()+CLEANUP_TEST1);        
@@ -161,7 +161,7 @@ public class CounterTest {
     @org.junit.Test
     public void testDescription() {
         CounterFactory factory = new JmxFactoryProducer().getCounterFactory();
-        Counter c1 = (Counter) factory.getJmxCounter(CLEANUP_TEST1);
+        CounterImpl c1 = (CounterImpl) factory.getJmxCounter(CLEANUP_TEST1);
         c1.setDescription("My description");
         try {
             MBeanServer mbs = ManagementFactory.getPlatformMBeanServer();
@@ -182,7 +182,7 @@ public class CounterTest {
     @org.junit.Test
     public void testUnit() {
         CounterFactory factory = new JmxFactoryProducer().getCounterFactory();
-        Counter c1 = (Counter) factory.getJmxCounter(CLEANUP_TEST1);
+        CounterImpl c1 = (CounterImpl) factory.getJmxCounter(CLEANUP_TEST1);
         c1.setUnit("flurps per millisecond");
         try {
             MBeanServer mbs = ManagementFactory.getPlatformMBeanServer();

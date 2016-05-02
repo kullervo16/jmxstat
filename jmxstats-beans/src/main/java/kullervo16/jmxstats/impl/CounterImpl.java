@@ -2,44 +2,37 @@
 package kullervo16.jmxstats.impl;
 
 import java.io.Serializable;
-import kullervo16.jmxstats.api.CounterMXBean;
 
 /**
  * This class models a simple counter.
  * 
  * @author jef
  */
-public class Counter implements CounterMXBean, Serializable{
+public class CounterImpl implements CounterImplMXBean, Serializable{
     
     private long value;
     private String description;
-    private String id;
+    private final String id;
     private String unit;
 
-    public Counter(String id) {
+    public CounterImpl(String id) {
         this.id = id;
     }
-
-    public Counter() {
-        
-    }
-            
-
-
+                    
     @Override
-    public Counter increment() {
+    public CounterImpl increment() {
         this.value++;
         return this;
     }
 
     @Override
-    public Counter increment(long inc) {
+    public CounterImpl increment(long inc) {
         this.value += inc;
         return this;
     }
 
     @Override
-    public Counter reset() {
+    public CounterImpl reset() {
         this.value = 0L;
         return this;
     }
@@ -75,5 +68,5 @@ public class Counter implements CounterMXBean, Serializable{
     public String toString() {
         return "Counter{" + "value=" + value + ", description=" + description + ", id=" + id + ", unit=" + unit + '}';
     }    
-    
+   
 }
