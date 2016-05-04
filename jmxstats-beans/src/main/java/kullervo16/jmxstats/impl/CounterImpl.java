@@ -10,7 +10,7 @@ import java.io.Serializable;
  */
 public class CounterImpl implements CounterImplMXBean, Serializable{
     
-    private long value;
+    private volatile long value;
     private String description;
     private final String id;
     private String unit;
@@ -45,6 +45,13 @@ public class CounterImpl implements CounterImplMXBean, Serializable{
     }
 
     @Override
+    public long getValueAndReset() {
+        long res = this.value;
+        reset();
+        return res;
+    }        
+
+    @Override
     public String getDescription() {
         return this.description;
     }
@@ -68,5 +75,10 @@ public class CounterImpl implements CounterImplMXBean, Serializable{
     public String toString() {
         return "Counter{" + "value=" + value + ", description=" + description + ", id=" + id + ", unit=" + unit + '}';
     }    
+
+    @Override
+    public String getId() {
+        return this.id;
+    }
    
 }

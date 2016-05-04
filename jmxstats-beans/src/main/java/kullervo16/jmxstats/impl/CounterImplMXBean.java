@@ -10,15 +10,5 @@ import kullervo16.jmxstats.api.Counter;
  */
 public interface CounterImplMXBean extends Counter {
 
-    /**
-     * 
-     * @return the description of the counter (useful when browsing the JMX tree) 
-     */
-    public String getDescription();
     
-    /**
-     * 
-     * @return the description of the counter (useful when browsing the JMX tree) 
-     */
-    public String getUnit();
 }

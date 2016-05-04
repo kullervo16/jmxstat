@@ -93,5 +93,27 @@ public abstract class CounterDecoratorImpl implements kullervo16.jmxstats.api.Co
         }
         return null;
     }
+
+    @Override
+    public long getValueAndReset() {
+        return this.nextInChain.getValueAndReset();
+    }
+
+    @Override
+    public String getDescription() {
+        return this.nextInChain.getDescription();
+    }
+
+    @Override
+    public String getUnit() {
+        return this.nextInChain.getUnit();
+    }
+
+    @Override
+    public String getId() {
+        return this.nextInChain.getId();
+    }
+    
+    
         
 }
