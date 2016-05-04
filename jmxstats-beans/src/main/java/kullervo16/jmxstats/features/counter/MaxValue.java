@@ -1,4 +1,4 @@
-package kullervo16.jmxstats.features;
+package kullervo16.jmxstats.features.counter;
 
 import kullervo16.jmxstats.impl.CounterDecoratorImpl;
 import kullervo16.jmxstats.api.Counter;

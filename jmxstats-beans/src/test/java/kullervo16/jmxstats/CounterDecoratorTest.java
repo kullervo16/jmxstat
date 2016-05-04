@@ -10,7 +10,8 @@ import java.util.List;
 import kullervo16.jmxstats.api.CounterDecorator;
 import kullervo16.jmxstats.factories.CounterFactory;
 import kullervo16.jmxstats.factories.JmxFactoryProducer;
-import kullervo16.jmxstats.features.MaxValue;
+import kullervo16.jmxstats.features.counter.EventEmitter;
+import kullervo16.jmxstats.features.counter.MaxValue;
 import kullervo16.jmxstats.impl.CounterImpl;
 import kullervo16.jmxstats.impl.CounterDecoratorImpl;
 import static org.junit.Assert.assertEquals;
@@ -64,9 +65,11 @@ public class CounterDecoratorTest {
          CounterFactory factory = new JmxFactoryProducer().getCounterFactory();
          List<Class<? extends CounterDecorator>> featureList = new LinkedList<>();
          featureList.add(MaxValue.class);
+         featureList.add(EventEmitter.class);
          CounterDecorator decoratedCounter =  factory.createDecoratedCounter(null, featureList);
          
          assertEquals(MaxValue.class, decoratedCounter.getSpecificFeature(MaxValue.class).getClass());
+         assertEquals(EventEmitter.class, decoratedCounter.getSpecificFeature(EventEmitter.class).getClass());
          
     }
 }

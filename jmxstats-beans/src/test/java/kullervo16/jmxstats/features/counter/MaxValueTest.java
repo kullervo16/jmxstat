@@ -3,8 +3,9 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package kullervo16.jmxstats.features;
+package kullervo16.jmxstats.features.counter;
 
+import kullervo16.jmxstats.features.counter.MaxValue;
 import java.util.LinkedList;
 import java.util.List;
 import kullervo16.jmxstats.api.CounterDecorator;
