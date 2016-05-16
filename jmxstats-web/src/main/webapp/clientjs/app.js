@@ -11,16 +11,32 @@
     app.controller('demoController', function($scope,$http,$window,$interval) {
         
         function init() {
-            $interval(function(){reloadDemoCounter();},1000);         
+            $interval(function(){reloadDemoCounter();},1000);     
         }
         
         function reloadDemoCounter() {
-            $http.get('../jolokia-war-1.3.3/read/kullervo16.jmx:type=demoCounter/Value')
-                .success(function (data,status,headers,config) {
-                    $scope.demoCounter = data;                    
-                }).error(function (data,status,headers,config) {
-                    console.log('Error getting rest/template/list');
-                });
+            var j4p = new Jolokia("../jolokia-war-1.3.3/");
+            j4p.request(
+              [ 
+                { type: "read", mbean: "kullervo16.jmx:type=demoCounter", attribute: "Value"},
+                { type: "read", mbean: "kullervo16.jmx:type=demoCounter", attribute: "Value"}
+              ],
+              { success: [ 
+                           function(response) {
+                              console.log("CB1"+JSON.stringify(response));
+                              $scope.demoCounter = response; 
+                           }, 
+                           function(response) {
+                              console.log("CB2"+JSON.stringify(response));
+                              $scope.demoCounter = response; 
+                           }
+                         ],
+                error: function(response) {
+                   alert("Jolokia request failed: " + response.error);
+                } 
+              }
+            );
+           
         }
         
         init();        
