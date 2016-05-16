@@ -65,9 +65,9 @@
             you can create a JMX Gauge with a maximum value and increment it when you call the asynch method, and decrement it when the callbackhandler completed</p>            
             <h2>Examples</h2>
             <p>Here you have this typical producer/consumer paradigm, directly executed via Jolokia calls (also the operations)</p>
-            <uib-progressbar max="10" animate="false" value="demoGauge.value" type="progressStyle"><b>{{demoGauge.value}}%</b></uib-progressbar>
-            <button id="produce" onclick="produce()">Produce</button>
-            <button id="consume" onclick="consume()">Consume</button>
+            <uib-progressbar max="10" animate="false" value="demoGauge.value" type="{{progressStyle}}"><b>{{demoGauge.value}}/10</b></uib-progressbar>
+            <button id="produce" onclick="angular.element(this).scope().produce()">Produce</button>
+            <button id="consume" onclick="angular.element(this).scope().consume()">Consume</button>
         </div>
 
     </h:body>

@@ -22,13 +22,18 @@
                 { type: "read", mbean: "kullervo16.jmx:type=demoGauge", attribute: "Value"}
               ],
               { success: [ 
-                           function(response) {
-                              console.log("CB1"+JSON.stringify(response));
+                           function(response) {                              
                               $scope.demoCounter = response; 
                            }, 
-                           function(response) {
-                              console.log("CB2"+JSON.stringify(response));
+                           function(response) {                              
                               $scope.demoGauge = response; 
+                              if(response.value < 8) {
+                                  $scope.progressStyle = 'success';
+                              } else if (response.value < 10) {
+                                  $scope.progressStyle = 'warning';
+                              } else {
+                                  $scope.progressStyle = 'danger';
+                              }
                            }
                          ],
                 error: function(response) {
@@ -38,6 +43,41 @@
             );
            
         }
+        
+        function produce() {
+            console.log("Produce");
+            $http.get('/jolokia-war-1.3.3/exec/kullervo16.jmx:type=demoGauge/increment()')            
+                .success(function (data,status,headers,config) {   
+                    if(data.error === undefined) {
+                      console.log("OK");
+                      reloadDemoCounter();  
+                    } else {
+                        alert("Cannot produce anymore : "+data.error);
+                    }
+                    
+                }).error(function (data,status,headers,config) {
+                    alert("Cannot produce anymore");
+                });             
+        }
+        
+        function consume() {
+            console.log("Consume");
+            console.log("Produce");
+            $http.get('/jolokia-war-1.3.3/exec/kullervo16.jmx:type=demoGauge/increment(long)/-1')            
+                .success(function (data,status,headers,config) {                    
+                    if(data.error === undefined) {
+                      console.log("OK");
+                      reloadDemoCounter();  
+                    } else {
+                        alert("Cannot consume anymore : "+data.error);
+                    }
+                }).error(function (data,status,headers,config) {
+                    alert("Cannot consume anymore");
+                }); 
+        }
+                
+        $scope.produce = produce;
+        $scope.consume = consume;
         
         init();        
     }
