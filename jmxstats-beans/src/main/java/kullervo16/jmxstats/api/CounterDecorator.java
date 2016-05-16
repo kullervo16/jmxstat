@@ -1,7 +1,7 @@
 package kullervo16.jmxstats.api;
 
 /**
- *
+ * Marker interface to specify that this counter is decorated.
  * @author jeve
  */
 public interface CounterDecorator extends Counter{

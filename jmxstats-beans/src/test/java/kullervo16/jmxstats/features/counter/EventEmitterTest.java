@@ -13,7 +13,6 @@ import kullervo16.jmxstats.api.CounterDecorator;
 import kullervo16.jmxstats.factories.CounterFactory;
 import kullervo16.jmxstats.factories.JmxFactoryProducer;
 import org.junit.Test;
-import org.mockito.Mockito;
 import static org.junit.Assert.assertEquals;
 
 /**
@@ -31,7 +30,7 @@ public class EventEmitterTest {
          CounterFactory factory = new JmxFactoryProducer().getCounterFactory();
          List<Class<? extends CounterDecorator>> featureList = new LinkedList<>();
          featureList.add(EventEmitter.class);
-         CounterDecorator decoratedCounter =  factory.createDecoratedCounter(null, featureList);
+         CounterDecorator decoratedCounter =  factory.createCounter(null, featureList);
          decoratedCounter.setDescription("boe");
          assertEquals(0, decoratedCounter.getValue());                 
     }
@@ -42,7 +41,7 @@ public class EventEmitterTest {
         CounterFactory factory = new JmxFactoryProducer().getCounterFactory();
         List<Class<? extends CounterDecorator>> featureList = new LinkedList<>();
         featureList.add(EventEmitter.class);
-        CounterDecorator decoratedCounter =  factory.createDecoratedCounter(null, featureList);
+        CounterDecorator decoratedCounter =  factory.createCounter(null, featureList);
         
                 
         EventEmitter emitter = (EventEmitter) decoratedCounter.getSpecificFeature(EventEmitter.class);

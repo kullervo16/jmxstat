@@ -11,7 +11,6 @@ import kullervo16.jmxstats.api.CounterDecorator;
 import kullervo16.jmxstats.factories.CounterFactory;
 import kullervo16.jmxstats.factories.JmxFactoryProducer;
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.fail;
 import org.junit.Test;
 
 /**
@@ -29,7 +28,7 @@ public class GaugeTest {
          CounterFactory factory = new JmxFactoryProducer().getCounterFactory();
          List<Class<? extends CounterDecorator>> featureList = new LinkedList<>();
          featureList.add(Gauge.class);
-         CounterDecorator decoratedCounter =  factory.createDecoratedCounter(null, featureList);
+         CounterDecorator decoratedCounter =  factory.createCounter(null, featureList);
          decoratedCounter.setDescription("boe");
          assertEquals(0, decoratedCounter.getValue());                 
     }
@@ -39,7 +38,7 @@ public class GaugeTest {
          CounterFactory factory = new JmxFactoryProducer().getCounterFactory();
          List<Class<? extends CounterDecorator>> featureList = new LinkedList<>();
          featureList.add(Gauge.class);
-         CounterDecorator decoratedCounter =  factory.createDecoratedCounter(null, featureList);
+         CounterDecorator decoratedCounter =  factory.createCounter(null, featureList);
          Gauge gauge = (Gauge)decoratedCounter.getSpecificFeature(Gauge.class);
          
          assertEquals(0, gauge.getValue());

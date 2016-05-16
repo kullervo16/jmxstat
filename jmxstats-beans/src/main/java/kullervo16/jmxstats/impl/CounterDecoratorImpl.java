@@ -9,7 +9,7 @@ import kullervo16.jmxstats.api.Counter;
  * 
  * @author jef
  */
-public abstract class CounterDecoratorImpl implements kullervo16.jmxstats.api.CounterDecorator{
+public class CounterDecoratorImpl implements kullervo16.jmxstats.api.CounterDecorator, CounterDecoratorImplMXBean{
     
     protected final Counter nextInChain;
     

@@ -5,9 +5,9 @@
  */
 package kullervo16.jmxstats.features.counter;
 
-import kullervo16.jmxstats.features.counter.MaxValue;
 import java.util.LinkedList;
 import java.util.List;
+import kullervo16.jmxstats.api.Counter;
 import kullervo16.jmxstats.api.CounterDecorator;
 import kullervo16.jmxstats.factories.CounterFactory;
 import kullervo16.jmxstats.factories.JmxFactoryProducer;
@@ -30,7 +30,7 @@ public class MaxValueTest {
          CounterFactory factory = new JmxFactoryProducer().getCounterFactory();
          List<Class<? extends CounterDecorator>> featureList = new LinkedList<>();
          featureList.add(MaxValue.class);
-         CounterDecorator decoratedCounter =  factory.createDecoratedCounter(null, featureList);
+         Counter decoratedCounter =  factory.createCounter(null, featureList);
          decoratedCounter.setDescription("boe");
          assertEquals(0, decoratedCounter.getValue());                 
     }
@@ -40,7 +40,7 @@ public class MaxValueTest {
          CounterFactory factory = new JmxFactoryProducer().getCounterFactory();
          List<Class<? extends CounterDecorator>> featureList = new LinkedList<>();
          featureList.add(MaxValue.class);
-         CounterDecorator decoratedCounter =  factory.createDecoratedCounter(null, featureList);
+         Counter decoratedCounter =  factory.createCounter(null, featureList);
          
          try {
              decoratedCounter.increment();

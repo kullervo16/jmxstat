@@ -14,6 +14,7 @@ import javax.management.MBeanServer;
 import javax.management.MalformedObjectNameException;
 import javax.management.ObjectName;
 import javax.management.ReflectionException;
+import kullervo16.jmxstats.api.Counter;
 import kullervo16.jmxstats.factories.CounterFactory;
 import kullervo16.jmxstats.factories.JmxFactoryProducer;
 import kullervo16.jmxstats.impl.CounterImpl;
@@ -78,8 +79,8 @@ public class CounterTest {
     @org.junit.Test
     public void testCreateCounterViaFactory()  {      
         CounterFactory factory = new JmxFactoryProducer().getCounterFactory();
-        CounterImpl c1 = (CounterImpl) factory.createCounter();
-        CounterImpl c2 = (CounterImpl) factory.createCounter();
+        Counter c1 = factory.createCounter();
+        Counter c2 = factory.createCounter();
         assertNotNull(c1); 
         c1.increment(60);
         assertNotNull(c2);
@@ -88,9 +89,9 @@ public class CounterTest {
         assertNotEquals(c1.getValue(), c2.getValue());
         
         // now with jmx counters
-        c1 = (CounterImpl) factory.getJmxCounter("type=test");
+        c1 = factory.getJmxCounter("type=test");
         c1.setDescription("Description 1");
-        c2 = (CounterImpl) factory.getJmxCounter("type=test");
+        c2 = factory.getJmxCounter("type=test");
         assertNotNull(c1);  
         c1.increment(60);
         assertNotNull(c2);
@@ -109,8 +110,8 @@ public class CounterTest {
     @org.junit.Test
     public void testUndeployCounterCleanup() throws MalformedObjectNameException, InstanceNotFoundException, IntrospectionException, ReflectionException  {
         CounterFactory factory = new JmxFactoryProducer().getCounterFactory();
-        CounterImpl c1 = (CounterImpl) factory.getJmxCounter(CLEANUP_TEST1);
-        CounterImpl c2 = (CounterImpl) factory.getJmxCounter(CLEANUP_TEST2);
+        Counter c1 =  factory.getJmxCounter(CLEANUP_TEST1);
+        Counter c2 =  factory.getJmxCounter(CLEANUP_TEST2);
         
         MBeanServer mbs = ManagementFactory.getPlatformMBeanServer();
         ObjectName mxbeanName1 = new ObjectName(factory.getPrefix()+CLEANUP_TEST1);        
@@ -137,8 +138,8 @@ public class CounterTest {
     @org.junit.Test
     public void testCounterCleanup() throws MalformedObjectNameException, InstanceNotFoundException, IntrospectionException, ReflectionException  {
         CounterFactory factory = new JmxFactoryProducer().getCounterFactory();
-        CounterImpl c1 = (CounterImpl) factory.getJmxCounter(CLEANUP_TEST1);
-        CounterImpl c2 = (CounterImpl) factory.getJmxCounter(CLEANUP_TEST2);
+        Counter c1 = factory.getJmxCounter(CLEANUP_TEST1);
+        Counter c2 = factory.getJmxCounter(CLEANUP_TEST2);
         
         MBeanServer mbs = ManagementFactory.getPlatformMBeanServer();
         ObjectName mxbeanName1 = new ObjectName(factory.getPrefix()+CLEANUP_TEST1);        
@@ -161,7 +162,7 @@ public class CounterTest {
     @org.junit.Test
     public void testDescription() {
         CounterFactory factory = new JmxFactoryProducer().getCounterFactory();
-        CounterImpl c1 = (CounterImpl) factory.getJmxCounter(CLEANUP_TEST1);
+        Counter c1 = factory.getJmxCounter(CLEANUP_TEST1);
         c1.setDescription("My description");
         try {
             MBeanServer mbs = ManagementFactory.getPlatformMBeanServer();
@@ -182,7 +183,7 @@ public class CounterTest {
     @org.junit.Test
     public void testUnit() {
         CounterFactory factory = new JmxFactoryProducer().getCounterFactory();
-        CounterImpl c1 = (CounterImpl) factory.getJmxCounter(CLEANUP_TEST1);
+        Counter c1 =  factory.getJmxCounter(CLEANUP_TEST1);
         c1.setUnit("flurps per millisecond");
         try {
             MBeanServer mbs = ManagementFactory.getPlatformMBeanServer();

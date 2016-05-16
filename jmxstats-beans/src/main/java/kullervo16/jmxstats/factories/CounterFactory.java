@@ -16,6 +16,7 @@ import javax.management.NotCompliantMBeanException;
 import javax.management.ObjectName;
 import kullervo16.jmxstats.api.Counter;
 import kullervo16.jmxstats.api.CounterDecorator;
+import kullervo16.jmxstats.impl.CounterDecoratorImpl;
 
 /**
  * This class produces counter instances.
@@ -38,21 +39,21 @@ public class CounterFactory {
     
     
     public Counter createCounter() {
-        return this.createCounter(null);
+        return this.createCounter((String)null);
     }
     
     public Counter createCounter(String id) {
         return new kullervo16.jmxstats.impl.CounterImpl(id);    
     }
     
-    public CounterDecorator createDecoratedCounter(List<Class<? extends CounterDecorator>> featureList) {
-        return this.createDecoratedCounter(null, featureList);
+    public CounterDecorator createCounter(List<Class<? extends CounterDecorator>> featureList) {
+        return this.createCounter(null, featureList);
     }
     
-    public CounterDecorator createDecoratedCounter(String id, List<Class<? extends CounterDecorator>> featureList)  {
+    public CounterDecorator createCounter(String id, List<Class<? extends CounterDecorator>> featureList)  {
         Counter counter = this.createCounter(id);
         if(featureList == null || featureList.isEmpty()) {
-            throw new IllegalArgumentException("Passing a null/empty feature list is useless. Please use the appropriate API");
+            return new CounterDecoratorImpl(counter);
         }
         Counter next = counter;
         CounterDecorator result = null;
@@ -83,12 +84,24 @@ public class CounterFactory {
      * @return   
      */
     public Counter getJmxCounter(String id)  {
+        return this.getJmxCounter(id, null);
+    }
+    
+    /**
+     * This methods returns a counter for a given id. If the counter does not exist yet, it will be created. Otherwise,
+     * the existing counter is returned.
+     * 
+     * @param id     
+     * @param featureList the features you want to add to your counter    
+     * @return   
+     */
+    public Counter getJmxCounter(String id, List<Class<? extends CounterDecorator>> featureList)  {
         try {
             synchronized (this.lock) {
                 if(this.counterMap.containsKey(id)) {
                     return this.counterMap.get(id);
                 }
-                this.counterMap.put(id, this.createCounter(id));
+                this.counterMap.put(id, this.createCounter(id,featureList));
             }
             // release the lock, we can safely allow others in... we have the reference so they can begin counting while
             // we continue the registration process

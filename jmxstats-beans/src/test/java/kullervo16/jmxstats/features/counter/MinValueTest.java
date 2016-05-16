@@ -30,7 +30,7 @@ public class MinValueTest {
          List<Class<? extends CounterDecorator>> featureList = new LinkedList<>();
          featureList.add(Gauge.class);
          featureList.add(MinValue.class);
-         CounterDecorator decoratedCounter =  factory.createDecoratedCounter(null, featureList);
+         CounterDecorator decoratedCounter =  factory.createCounter(null, featureList);
          decoratedCounter.setDescription("boe");
          assertEquals(0, decoratedCounter.getValue());                 
     }
@@ -42,7 +42,7 @@ public class MinValueTest {
          featureList.add(MinValue.class);
          featureList.add(Gauge.class);
          
-         CounterDecorator decoratedCounter =  factory.createDecoratedCounter(null, featureList);
+         CounterDecorator decoratedCounter =  factory.createCounter(null, featureList);
          Gauge gauge = (Gauge)decoratedCounter.getSpecificFeature(Gauge.class);
          MinValue mv = (MinValue)decoratedCounter.getSpecificFeature(MinValue.class);
          

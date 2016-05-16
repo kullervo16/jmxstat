@@ -70,5 +70,5 @@ public interface Counter {
      * 
      * @return the counter ID (if any)
      */
-    public String getId();
+    public String getId();        
 }
