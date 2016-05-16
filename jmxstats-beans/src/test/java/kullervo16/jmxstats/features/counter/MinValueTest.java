@@ -5,7 +5,6 @@
  */
 package kullervo16.jmxstats.features.counter;
 
-import kullervo16.jmxstats.features.counter.MaxValue;
 import java.util.LinkedList;
 import java.util.List;
 import kullervo16.jmxstats.api.CounterDecorator;
@@ -19,9 +18,9 @@ import org.junit.Test;
  *
  * @author jeve
  */
-public class MaxValueTest {
+public class MinValueTest {
     
-    public MaxValueTest() {
+    public MinValueTest() {
     }
 
     
@@ -29,39 +28,48 @@ public class MaxValueTest {
     public void testCreate() {
          CounterFactory factory = new JmxFactoryProducer().getCounterFactory();
          List<Class<? extends CounterDecorator>> featureList = new LinkedList<>();
-         featureList.add(MaxValue.class);
+         featureList.add(Gauge.class);
+         featureList.add(MinValue.class);
          CounterDecorator decoratedCounter =  factory.createDecoratedCounter(null, featureList);
          decoratedCounter.setDescription("boe");
          assertEquals(0, decoratedCounter.getValue());                 
     }
     
     @Test
-    public void testMaxValue() {
+    public void testMinValue() {
          CounterFactory factory = new JmxFactoryProducer().getCounterFactory();
          List<Class<? extends CounterDecorator>> featureList = new LinkedList<>();
-         featureList.add(MaxValue.class);
+         featureList.add(MinValue.class);
+         featureList.add(Gauge.class);
+         
          CounterDecorator decoratedCounter =  factory.createDecoratedCounter(null, featureList);
+         Gauge gauge = (Gauge)decoratedCounter.getSpecificFeature(Gauge.class);
+         MinValue mv = (MinValue)decoratedCounter.getSpecificFeature(MinValue.class);
+         
          
          try {
-             decoratedCounter.increment();
+             gauge.decrement();
              fail("should have thrown an exception");
          }catch(IllegalStateException ise) {
-             assertEquals("Requested increment (1) cannot be added to 0 as it would surpass the maximum value (0)", ise.getMessage());
+             assertEquals("Requested increment (-1) cannot be applied to 0 as it would surpass the minimum value (0)", ise.getMessage());
          }
-         ((MaxValue)decoratedCounter).setMaxValue(10);
-         assertEquals(1, decoratedCounter.increment().getValue());
+         gauge.increment(10);
+         assertEquals(9, gauge.decrement().getValue());         
+                  
          try {
-             decoratedCounter.increment(20);
+             mv.setMinValue(10);
              fail("should have thrown an exception");
          }catch(IllegalStateException ise) {
-             assertEquals("Requested increment (20) cannot be added to 1 as it would surpass the maximum value (10)", ise.getMessage());
+             assertEquals("Current value (9) is lower than the requested minimum (10)", ise.getMessage());
          }
-         assertEquals(7, decoratedCounter.increment(6).getValue());
+         mv.setMinValue(5);
          try {
-             ((MaxValue)decoratedCounter).setMaxValue(5);
+             gauge.decrement(20);
              fail("should have thrown an exception");
          }catch(IllegalStateException ise) {
-             assertEquals("Current value (7) is higher than the requested maximum (5)", ise.getMessage());
+             assertEquals("Requested increment (-20) cannot be applied to 9 as it would surpass the minimum value (5)", ise.getMessage());
          }
     }
+    
+    
 }
