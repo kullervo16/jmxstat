@@ -42,7 +42,7 @@
             <p>This means that if you would open a new browser and navigate to this page, the counter will restart from 1</p>
             <p>JMX counters are always application scoped, so it will probably not start at 1. And changes from your page will also be reflected to others : <span class="label label-default"><h:outputText value="${counter.jmxValue}"/></span></p>        
             <p>Since it is exposed via JMX, you can follow it with a JMX browser. The name of the counter is <span style="font-weight: bold">kullervo16.jmx:type=demoCounter</span></p>
-            <p>If you have jolokia installed (like we do), you can access it via REST on this URL <span style="font-weight: bold"><a href="../jolokia-war-1.3.3/read/kullervo16.jmx:type=demoCounter/Value" target="_blank">jolokia-war-1.3.3/read/kullervo16.jmx:type=demoCounter/Value</a></span>, 
+            <p>If you have jolokia installed (like we do), you can access it via REST on this URL <span style="font-weight: bold"><a href="/jolokia-war-1.3.3/read/kullervo16.jmx:type=demoCounter/Value" target="_blank">jolokia-war-1.3.3/read/kullervo16.jmx:type=demoCounter/Value</a></span>, 
                 which you can use to update the value via ajax like this (open a new browser and see this counter move automagically) <span class="label label-default">{{demoCounter.value}}</span></p>
             
             <h3>Additional features</h3>
@@ -65,7 +65,7 @@
             you can create a JMX Gauge with a maximum value and increment it when you call the asynch method, and decrement it when the callbackhandler completed</p>            
             <h2>Examples</h2>
             <p>Here you have this typical producer/consumer paradigm, directly executed via Jolokia calls (also the operations)</p>
-            <uib-progressbar animate="false" value="progress" type="progressStyle"><b>{{progress}}%</b></uib-progressbar>
+            <uib-progressbar max="10" animate="false" value="demoGauge.value" type="progressStyle"><b>{{demoGauge.value}}%</b></uib-progressbar>
             <button id="produce" onclick="produce()">Produce</button>
             <button id="consume" onclick="consume()">Consume</button>
         </div>

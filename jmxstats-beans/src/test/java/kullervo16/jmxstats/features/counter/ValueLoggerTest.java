@@ -39,9 +39,9 @@ public class ValueLoggerTest {
          CounterFactory factory = new JmxFactoryProducer().getCounterFactory();
          List<Class<? extends CounterDecorator>> featureList = new LinkedList<>();
          featureList.add(ValueLogger.class);
-         Counter decoratedCounter =  factory.createCounter(null, featureList);
+         ValueLogger decoratedCounter =  factory.getValueLogger(factory.createCounter(null, featureList));
          decoratedCounter.increment();
-         decoratedCounter =  factory.createCounter("with id", featureList);
+         decoratedCounter =  factory.getValueLogger(factory.createCounter("with id", featureList));
          decoratedCounter.increment();
     }
 }

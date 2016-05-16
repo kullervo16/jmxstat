@@ -19,7 +19,7 @@
             j4p.request(
               [ 
                 { type: "read", mbean: "kullervo16.jmx:type=demoCounter", attribute: "Value"},
-                { type: "read", mbean: "kullervo16.jmx:type=demoCounter", attribute: "Value"}
+                { type: "read", mbean: "kullervo16.jmx:type=demoGauge", attribute: "Value"}
               ],
               { success: [ 
                            function(response) {
@@ -28,11 +28,11 @@
                            }, 
                            function(response) {
                               console.log("CB2"+JSON.stringify(response));
-                              $scope.demoCounter = response; 
+                              $scope.demoGauge = response; 
                            }
                          ],
                 error: function(response) {
-                   alert("Jolokia request failed: " + response.error);
+                   console.log("Jolokia request failed: " + response.error);
                 } 
               }
             );

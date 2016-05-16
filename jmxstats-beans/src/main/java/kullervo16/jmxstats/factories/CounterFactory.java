@@ -16,6 +16,11 @@ import javax.management.NotCompliantMBeanException;
 import javax.management.ObjectName;
 import kullervo16.jmxstats.api.Counter;
 import kullervo16.jmxstats.api.CounterDecorator;
+import kullervo16.jmxstats.features.counter.EventEmitter;
+import kullervo16.jmxstats.features.counter.Gauge;
+import kullervo16.jmxstats.features.counter.MaxValue;
+import kullervo16.jmxstats.features.counter.MinValue;
+import kullervo16.jmxstats.features.counter.ValueLogger;
 import kullervo16.jmxstats.impl.CounterDecoratorImpl;
 
 /**
@@ -153,5 +158,44 @@ public class CounterFactory {
         }catch(InstanceNotFoundException | MBeanRegistrationException | MalformedObjectNameException registEx) {
             // well' what can we do... just ignore
         }
+    } 
+    
+    // ================================================
+    // Easy access functions to the features.
+    // ================================================
+    
+    public Gauge getGauge(Counter c) {
+        if(c instanceof CounterDecorator) {
+            return (Gauge)((CounterDecorator)c).getSpecificFeature(Gauge.class);
+        }
+        return null;
+    }
+    
+    public MinValue getMinValue(Counter c) {
+        if(c instanceof CounterDecorator) {
+            return (MinValue)((CounterDecorator)c).getSpecificFeature(MinValue.class);
+        }
+        return null;
+    }
+    
+    public MaxValue getMaxValue(Counter c) {
+        if(c instanceof CounterDecorator) {
+            return (MaxValue)((CounterDecorator)c).getSpecificFeature(MaxValue.class);
+        }
+        return null;
+    }
+    
+    public EventEmitter getEventEmitter(Counter c) {
+        if(c instanceof CounterDecorator) {
+            return (EventEmitter)((CounterDecorator)c).getSpecificFeature(EventEmitter.class);
+        }
+        return null;
+    }
+    
+    public ValueLogger getValueLogger(Counter c) {
+        if(c instanceof CounterDecorator) {
+            return (ValueLogger)((CounterDecorator)c).getSpecificFeature(ValueLogger.class);
+        }
+        return null;
     }
 }

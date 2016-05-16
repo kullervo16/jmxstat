@@ -39,7 +39,7 @@ public class GaugeTest {
          List<Class<? extends CounterDecorator>> featureList = new LinkedList<>();
          featureList.add(Gauge.class);
          CounterDecorator decoratedCounter =  factory.createCounter(null, featureList);
-         Gauge gauge = (Gauge)decoratedCounter.getSpecificFeature(Gauge.class);
+         Gauge gauge = factory.getGauge(decoratedCounter);
          
          assertEquals(0, gauge.getValue());
          gauge.increment(1);

@@ -39,8 +39,11 @@ public class CounterDemoBean implements Serializable{
         featureList.add(Gauge.class);
         featureList.add(MinValue.class);
         featureList.add(MaxValue.class);
-        counterFactory.getJmxCounter(TYPEDEMO_GAUGE, featureList);
-        counterFactory.getJmxCounter(TYPEDEMO_GAUGE).setDescription("Counter to count the number of times a page has been fetched");
+        Counter gauge = counterFactory.getJmxCounter(TYPEDEMO_GAUGE, featureList);
+        gauge.setDescription("Gauge to monitor a virtual queue (min = 0, max = 10");
+        gauge.setUnit("elements");
+        counterFactory.getMinValue(gauge).setMinValue(0);
+        counterFactory.getMaxValue(gauge).setMaxValue(10);
     }
     
     public long getCounterValue() {

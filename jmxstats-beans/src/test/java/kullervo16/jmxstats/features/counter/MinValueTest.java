@@ -43,8 +43,8 @@ public class MinValueTest {
          featureList.add(Gauge.class);
          
          CounterDecorator decoratedCounter =  factory.createCounter(null, featureList);
-         Gauge gauge = (Gauge)decoratedCounter.getSpecificFeature(Gauge.class);
-         MinValue mv = (MinValue)decoratedCounter.getSpecificFeature(MinValue.class);
+         Gauge gauge = factory.getGauge(decoratedCounter);
+         MinValue mv = factory.getMinValue(decoratedCounter);
          
          
          try {

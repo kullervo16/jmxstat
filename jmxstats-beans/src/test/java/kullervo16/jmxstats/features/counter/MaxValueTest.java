@@ -40,7 +40,7 @@ public class MaxValueTest {
          CounterFactory factory = new JmxFactoryProducer().getCounterFactory();
          List<Class<? extends CounterDecorator>> featureList = new LinkedList<>();
          featureList.add(MaxValue.class);
-         Counter decoratedCounter =  factory.createCounter(null, featureList);
+         MaxValue decoratedCounter =  factory.getMaxValue(factory.createCounter(null, featureList));
          
          try {
              decoratedCounter.increment();
@@ -48,7 +48,7 @@ public class MaxValueTest {
          }catch(IllegalStateException ise) {
              assertEquals("Requested increment (1) cannot be added to 0 as it would surpass the maximum value (0)", ise.getMessage());
          }
-         ((MaxValue)decoratedCounter).setMaxValue(10);
+         decoratedCounter.setMaxValue(10);
          assertEquals(1, decoratedCounter.increment().getValue());
          try {
              decoratedCounter.increment(20);
@@ -58,7 +58,7 @@ public class MaxValueTest {
          }
          assertEquals(7, decoratedCounter.increment(6).getValue());
          try {
-             ((MaxValue)decoratedCounter).setMaxValue(5);
+             decoratedCounter.setMaxValue(5);
              fail("should have thrown an exception");
          }catch(IllegalStateException ise) {
              assertEquals("Current value (7) is higher than the requested maximum (5)", ise.getMessage());

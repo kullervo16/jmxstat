@@ -44,7 +44,7 @@ public class EventEmitterTest {
         CounterDecorator decoratedCounter =  factory.createCounter(null, featureList);
         
                 
-        EventEmitter emitter = (EventEmitter) decoratedCounter.getSpecificFeature(EventEmitter.class);
+        EventEmitter emitter = factory.getEventEmitter(decoratedCounter);
         Listener l1 = new Listener(emitter);
         Listener l2 = new Listener(emitter);
         
