@@ -95,8 +95,8 @@ public class CounterDecoratorImpl implements kullervo16.jmxstats.api.CounterDeco
     }
 
     @Override
-    public long getValueAndReset() {
-        return this.nextInChain.getValueAndReset();
+    public long readValueAndReset() {
+        return this.nextInChain.readValueAndReset();
     }
 
     @Override

@@ -40,7 +40,7 @@ public interface Counter {
      * Atomically returns the value and resets the counter
      * @return the current value of the counter. 
      */
-    public long getValueAndReset();
+    public long readValueAndReset();
     
     /**
      * This method sets the description of what is counted

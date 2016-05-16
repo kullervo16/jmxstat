@@ -46,7 +46,7 @@ public class CounterImpl implements CounterImplMXBean, Serializable{
     }
 
     @Override
-    public long getValueAndReset() {
+    public long readValueAndReset() {
         long res = this.value;
         reset();
         return res;
