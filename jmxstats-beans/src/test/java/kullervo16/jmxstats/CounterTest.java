@@ -42,6 +42,8 @@ public class CounterTest {
         assertEquals(1, result.getValue());  
         result = instance.increment();
         assertEquals(2, result.getValue()); 
+        
+        assertNotNull(result.toString());
     }
 
     /**
@@ -68,6 +70,15 @@ public class CounterTest {
         assertEquals(2, result.getValue());
         result = instance.reset();
         assertEquals(0, result.getValue());
+    }
+    
+    @org.junit.Test
+    public void testReadAndReset() {
+        CounterImpl instance = new CounterImpl(null);
+        
+        CounterImpl result = instance.increment(42);
+        assertEquals(42, result.readValueAndReset());          
+        assertEquals(0, result.getValue()); 
     }
 
     
@@ -112,7 +123,7 @@ public class CounterTest {
         CounterFactory factory = new JmxFactoryProducer().getCounterFactory();
         Counter c1 =  factory.getJmxCounter(CLEANUP_TEST1);
         Counter c2 =  factory.getJmxCounter(CLEANUP_TEST2);
-        
+                        
         MBeanServer mbs = ManagementFactory.getPlatformMBeanServer();
         ObjectName mxbeanName1 = new ObjectName(factory.getPrefix()+CLEANUP_TEST1);        
         assertNotNull(mbs.getMBeanInfo(mxbeanName1));
@@ -139,6 +150,7 @@ public class CounterTest {
     public void testCounterCleanup() throws MalformedObjectNameException, InstanceNotFoundException, IntrospectionException, ReflectionException  {
         CounterFactory factory = new JmxFactoryProducer().getCounterFactory();
         Counter c1 = factory.getJmxCounter(CLEANUP_TEST1);
+        assertEquals(CLEANUP_TEST1, c1.getId());
         Counter c2 = factory.getJmxCounter(CLEANUP_TEST2);
         
         MBeanServer mbs = ManagementFactory.getPlatformMBeanServer();

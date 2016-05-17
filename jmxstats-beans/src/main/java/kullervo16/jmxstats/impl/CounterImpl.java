@@ -2,7 +2,6 @@
 package kullervo16.jmxstats.impl;
 
 import java.io.Serializable;
-import kullervo16.jmxstats.api.CounterDecorator;
 
 /**
  * This class models a simple counter.

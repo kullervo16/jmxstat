@@ -9,7 +9,7 @@ package kullervo16.jmxstats.api;
  * 
  * @author jef
  */
-public interface Counter {
+public interface Counter extends Stat{
     
     /**
      * Increments the counter with 1.
@@ -42,11 +42,6 @@ public interface Counter {
      */
     public long readValueAndReset();
     
-    /**
-     * This method sets the description of what is counted
-     * @param description 
-     */
-    public void setDescription(String description);
     
     /**
      * This method specifies the counters unit
@@ -54,11 +49,6 @@ public interface Counter {
      */
     public void setUnit(String unit);
     
-    /**
-     * 
-     * @return the description of the counter (useful when browsing the JMX tree) 
-     */
-    public String getDescription();
     
     /**
      * 
@@ -66,9 +56,4 @@ public interface Counter {
      */
     public String getUnit();
     
-    /**
-     * 
-     * @return the counter ID (if any)
-     */
-    public String getId();        
 }
